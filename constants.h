@@ -24,9 +24,9 @@
 #define NUMBER_OF_ROWS 6
 #define NUMBER_TO_WIN 4
 
-#define EMPTY_MARKER '\0'
-#define MARKER1 '\1'
-#define MARKER2 '\2'
+#define EMPTY_MARKER '_'
+#define MARKER1 'X'
+#define MARKER2 'O'
 
 #define MOVE_INDICATOR 1 /* Indicates where its players turn */
 #define WAIT_INDICATOR 0 /* Indicates where its not players turn */

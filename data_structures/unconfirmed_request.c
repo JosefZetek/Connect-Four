@@ -38,11 +38,10 @@ int compare_request(struct unconfirmed_request * request, struct sockaddr_in * a
 
     request_message_type = request->message[0];
 
-    printf("Before request address comparation\n");
     /* If not address */
     if(memcmp(request->addr, addr, addr_len))
         return 0;
-    printf("After request address comparation\n");
+    
     if(request_message_type != message_type)
         return 0;
 

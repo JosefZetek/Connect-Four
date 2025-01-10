@@ -12,11 +12,11 @@ static struct game_structure * get_game(struct vector * games, struct game_struc
         if(game == NULL)
             continue;
 
-        if(memcmp(game->player1_addr, client_addr, client_size) || memcmp(game->player2_addr, client_addr, client_size))
+        if(!memcmp(game->player1_addr, client_addr, client_size) || !memcmp(game->player2_addr, client_addr, client_size))
             return game;
     }
 
-    if(lobby && (memcmp(lobby->player1_addr, client_addr, client_size) || memcmp(lobby->player2_addr, client_addr, client_size)))
+    if(lobby && (!memcmp(lobby->player1_addr, client_addr, client_size) || !memcmp(lobby->player2_addr, client_addr, client_size)))
         return lobby;
 
     return NULL;
@@ -25,20 +25,16 @@ static struct game_structure * get_game(struct vector * games, struct game_struc
 static int clear_request(struct game_structure * game, struct sockaddr_in * client_addr, char message_type) {
     struct unconfirmed_request * request;
 
-    printf("OK");
     /* If no confirmation is required */
     if(!vector_count(game->unconfirmed_requests))
         return 0;
     
-    printf("OK2");
     request = vector_at(game->unconfirmed_requests, 0);
-    
     
     /* If the confirmed different request than wanted */
     if(!compare_request(request, client_addr, message_type))
         return 0;
 
-    printf("OK3");
     /* Remove confirmed request */
     vector_remove(game->unconfirmed_requests, 0);
     return 1;
@@ -112,7 +108,7 @@ static int handle_connect(struct vector * games, struct game_structure ** game, 
     }
 
     /* Create turn game message */
-    if(!turn_message(buffer, &message_length, 0)) {
+    if(!turn_message(buffer, &message_length)) {
         printf("Failed to create turn message\n");
         return 0;
     }
@@ -171,12 +167,13 @@ static int handle_play(struct game_structure * game, struct sockaddr_in * client
         return 0;
     }
 
-    if(memcmp(game->player1_addr, client_addr, client_size) && game->current_player != 0) {
+    if(!memcmp(game->player1_addr, client_addr, client_size) && (game->current_player%2)) {
         printf("It is not players turn\n");
         return 0;
     }
 
-    if(memcmp(game->player2_addr, client_addr, client_size) && game->current_player != 1) {
+
+    if(!memcmp(game->player2_addr, client_addr, client_size) && !(game->current_player%2)) {
         printf("It is not players turn\n");
         return 0;
     }
@@ -197,6 +194,7 @@ static int handle_play(struct game_structure * game, struct sockaddr_in * client
     }
 
     column = buffer[1];
+    printf("Column played: %d\n", column);
 
     if(!play_column(game, column)) {
         printf("Failed to play column\n");
@@ -299,32 +297,7 @@ static int handle_play(struct game_structure * game, struct sockaddr_in * client
         return 1;
     }
 
-    if(!state_message(buffer, &message_length, game, column)) {
-        printf("Failed to create state message\n");
-        return 0;
-    }
-
-    if(!(request = unconfirmed_request_init(current_player, buffer, message_length))) {
-        printf("Failed to initialize unconfirmed request\n");
-        return 0;
-    }
-
-    if(!vector_push_back(game->unconfirmed_requests, request)) {
-        printf("Failed to add unconfirmed request\n");
-        return 0;
-    }
-
-    if(!(request = unconfirmed_request_init(opponent_player, buffer, message_length))) {
-        printf("Failed to initialize unconfirmed request\n");
-        return 0;
-    }
-
-    if(!vector_push_back(game->unconfirmed_requests, request)) {
-        printf("Failed to add unconfirmed request\n");
-        return 0;
-    }
-
-    if(!turn_message(buffer, &message_length, game->current_player)) {
+    if(!turn_message(buffer, &message_length)) {
         printf("Failed to create turn message\n");
         return 0;
     }

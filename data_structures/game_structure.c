@@ -181,7 +181,9 @@ int play_column(struct game_structure * game, int column) {
 
     player_marker = game->current_player%2 == 0 ? MARKER1 : MARKER2;
 
+    printf("Player %d played row %d column %d\n", game->current_player, row, column);
     game->board[row][column] = player_marker;
+    printf("Player %d played inserted value as [%d][%d] = %d\n", game->current_player, row, column, game->board[row][column]);
 
     return 1;
 }
@@ -191,10 +193,10 @@ int check_tie(struct game_structure * game) {
 
     for(i = 0; i<NUMBER_OF_COLUMNS; i++) {
         if(__get_empty_row(game, i) == -1)
-            return 0;
+            return 1;
     }
 
-    return 1;
+    return 0;
 }
 
 int check_win(struct game_structure * game, int column) {

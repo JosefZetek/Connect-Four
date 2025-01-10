@@ -11,7 +11,7 @@ int start_game_message(char * buffer, int * length, int player) {
     return 1;
 }
 
-int turn_message(char * buffer, int * length, int player) {
+int turn_message(char * buffer, int * length) {
     if(!buffer || !length)
         return 0;
 
@@ -30,8 +30,12 @@ int state_message(char * buffer, int * length, struct game_structure * game, int
     buffer[0] = STATE_MESSAGE;
 
     /* Insert rows in a given column */
-    for(i = 0; i<NUMBER_OF_ROWS; i++)
-        buffer[i + 1] = game->board[i][column];
+    for(i = 0; i<NUMBER_OF_ROWS; i++) {
+        printf("[%d][%d] = %d\n", i, column, game->board[i][column]);
+        buffer[i + 1] = (char)game->board[i][column];
+    }
+
+    
 
     *length = NUMBER_OF_ROWS + 1;
 
