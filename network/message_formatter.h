@@ -1,8 +1,10 @@
 #include "../data_structures/game_structure.h"
 #include "../constants.h"
 
-int confirmation_message(char * buffer, int * length, int message_type);
-
-int registered_message(char * buffer, int * length);
-
 int start_game_message(char * buffer, int * length, int player);
+
+int turn_message(char * buffer, int * lenght, int player);
+
+int state_message(char * buffer, int * length, struct game_structure * game, int column);
+
+int end_game_message(char * buffer, int * length, char result);

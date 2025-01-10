@@ -183,9 +183,28 @@ int play_column(struct game_structure * game, int column) {
 
     game->board[row][column] = player_marker;
 
-    if(check_column(game, row, column, player_marker) || check_row(game, row, column, player_marker) || check_diagonals(game, row, column, player_marker)) {
-        return 1;
+    return 1;
+}
+
+int check_tie(struct game_structure * game) {
+    int i;
+
+    for(i = 0; i<NUMBER_OF_COLUMNS; i++) {
+        if(__get_empty_row(game, i) == -1)
+            return 0;
     }
+
+    return 1;
+}
+
+int check_win(struct game_structure * game, int column) {
+    int row = __get_empty_row(game, column) + 1;
+    char marker = game->current_player%2 ? MARKER1 : MARKER2;
+
+
+    if(check_column(game, column, row, marker) || check_row(game, row, column, marker) || check_diagonals(game, row, column, marker))
+        return 1;
 
     return 0;
 }
+

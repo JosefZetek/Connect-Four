@@ -47,23 +47,16 @@ static void resend_unconfirmed_messages(int sockfd, struct vector * games, struc
     struct game_structure * game;
     struct unconfirmed_request * request;
     int i, j;
-
-    /* Send unconfirmed messages for lobby */
-    if(lobby) {
-        for(i = 0; i<vector_count(lobby->unconfirmed_requests); i++) {
-            request = vector_at(lobby->unconfirmed_requests, i);
-            update_unconfirmed(sockfd, request);
-        }
-    }
     
     /* Send unconfirmed messages */
     for(i = 0; i<vector_count(games); i++) {
         game = vector_at(games, i);
 
-        for(j = 0; j<vector_count(game->unconfirmed_requests); j++) {
-            request = vector_at(game->unconfirmed_requests, j);
-            update_unconfirmed(sockfd, request);
-        }
+        if(!vector_count(game->unconfirmed_requests))
+            continue;
+
+        request = vector_at(game->unconfirmed_requests, j);
+        update_unconfirmed(sockfd, request);
     }
 }
 

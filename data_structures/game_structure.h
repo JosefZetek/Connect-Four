@@ -56,3 +56,19 @@ void game_deallocate(struct game_structure ** game);
  */
 int play_column(struct game_structure * game, int column);
 
+
+/**
+ * @brief Function checks if the game is tie
+ * @param game The game structure
+ * @return Returns 1 if it is a tie, 0 otherwise
+ */
+int check_tie(struct game_structure * game);
+
+
+/**
+ * @brief Function checks if the current player won
+ * @param game The game structure
+ * @param column Column he chosed in his most recent turn
+ * @return Returns 1 if he won the game
+ */
+int check_win(struct game_structure * game, int column);

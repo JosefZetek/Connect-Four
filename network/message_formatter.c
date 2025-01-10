@@ -1,45 +1,55 @@
 #include "message_formatter.h"
 
-int confirmation_message(char * buffer, int * length, int message_type) {
-
-    if(!buffer || !length)
-        return 0;
-
-    buffer[0] = CONFIRMATION_MESSAGE;
-    buffer[1] = message_type;
-    *length = 2;
-    return 1;
-}
-
-int registered_message(char * buffer, int * length) {
-    if(!buffer || !length)
-        return 0;
-
-    buffer[0] = REGISTERED_MESSAGE;
-    *length = 1;
-
-    return 1;
-}
-
 int start_game_message(char * buffer, int * length, int player) {
     if(!buffer || !length)
         return 0;
 
     buffer[0] = START_GAME_MESSAGE;
     buffer[1] = player%2 ? MARKER1 : MARKER2;
-    buffer[2] = player ? MOVE_INDICATOR : WAIT_INDICATOR;
-    *length = 3;
-
-    return 1;
-}
-
-int instruction_message(char * buffer, int * length, int player) {
-    if(!buffer || !length)
-        return 0;
-
-    buffer[0] = TURN_MESSAGE;
-    buffer[1] = player;
     *length = 2;
 
     return 1;
 }
+
+int turn_message(char * buffer, int * length, int player) {
+    if(!buffer || !length)
+        return 0;
+
+    buffer[0] = TURN_MESSAGE;
+
+    *length = 1;
+    return 1;
+}
+
+int state_message(char * buffer, int * length, struct game_structure * game, int column) {
+    int i;
+
+    if(!buffer || !length || !game || column < 0 || column >= NUMBER_OF_COLUMNS)
+        return 0;
+
+    buffer[0] = STATE_MESSAGE;
+
+    /* Insert rows in a given column */
+    for(i = 0; i<NUMBER_OF_ROWS; i++)
+        buffer[i + 1] = game->board[i][column];
+
+    *length = NUMBER_OF_ROWS + 1;
+
+    return 1;
+}
+
+int end_game_message(char * buffer, int * length, char result) {
+    if(!buffer || !length)
+        return 0;
+
+    buffer[0] = END_GAME_MESSAGE;
+    buffer[1] = result;
+
+    *length = 2;
+
+    return 1;
+}
+
+
+
+
