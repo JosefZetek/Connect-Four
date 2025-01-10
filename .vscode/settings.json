@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "networking.h": "c",
+        "un.h": "c",
+        "message_formatter.h": "c",
+        "unconfirmed_request.h": "c",
+        "constants.h": "c",
+        "game_structure.h": "c"
+    }
+}
